@@ -53,6 +53,9 @@ export default function LoginPage() {
               >
                 Entrar
               </Button>
+              <div className="p-3 text-xs text-muted-foreground">
+                Se entrar sem sala, você vai para <strong>#geral</strong>.
+              </div>
             </div>
           </CardContent>
         </Card>

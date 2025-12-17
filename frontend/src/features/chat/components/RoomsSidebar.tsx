@@ -44,10 +44,8 @@ function RoomButton({
 
 export default function RoomsSidebar({
   className,
-  mobile = false,
 }: {
   className?: string
-  mobile?: boolean
 }) {
   const { fixedRooms, roomsOnline, rooms: localRooms, room, switchRoom } = useChat()
 
@@ -127,12 +125,6 @@ export default function RoomsSidebar({
           </AccordionItem>
         </Accordion>
       </div>
-
-      {mobile ? null : (
-        <div className="p-3 text-xs text-muted-foreground">
-          Se entrar sem sala, você vai para <strong>#geral</strong>.
-        </div>
-      )}
     </aside>
   )
 }
