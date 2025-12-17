@@ -3,6 +3,7 @@ export type ChatMessage = {
   text: string;
   room?: string;
   imageUrl?: string;
+  kind?: "chat" | "system";
 };
 
 export type ChatState = {

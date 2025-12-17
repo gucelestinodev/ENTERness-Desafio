@@ -18,6 +18,7 @@ type ExtendedState = ChatState & {
   upsertRoom: (room: string) => void
 
   switchRoom: (room: string) => void
+  logout: () => void
 }
 
 export const useChat = create<ExtendedState>((set, get) => ({
@@ -58,8 +59,14 @@ export const useChat = create<ExtendedState>((set, get) => ({
   },
 
   addMessage: (m: ChatMessage) => set((s) => ({ messages: [...s.messages, m] })),
-  addStatus: (s: string) => set((st) => ({ status: [...st.status, s] })),
-  setHistory: (list: ChatMessage[]) => set(() => ({ messages: list })),
+  addStatus: (text: string) =>
+    set((st) => ({
+      status: [...st.status, text],
+      messages: [
+        ...st.messages,
+        { user: "__system__", text, kind: "system" },
+      ],
+    })), setHistory: (list: ChatMessage[]) => set(() => ({ messages: list })),
 
   switchRoom: (newRoom) => {
     const { user } = get()
@@ -71,5 +78,19 @@ export const useChat = create<ExtendedState>((set, get) => ({
     localStorage.setItem("room", room)
     
     set({ room, messages: [], status: [] })
+  },
+
+  logout: () => {
+    localStorage.removeItem("name")
+    localStorage.removeItem("room")
+
+    set({
+      user: undefined,
+      room: "geral",
+      messages: [],
+      status: [],
+      roomsOnline: [],
+      rooms: [],
+    })
   },
 }))
