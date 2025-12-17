@@ -1,29 +1,52 @@
-import { useEffect } from "react";
-import { socket } from "@/lib/socket";
-import { useChat } from "../store/chat";
+import { useEffect, useRef } from "react"
+import { socket } from "@/lib/socket"
+import { useChat } from "@/features/chat/store/chat"
+import { TRACE_ID } from "@/lib/trace"
+import type { RoomInfo } from "@/features/chat/store/chat"
 
 export function useChatSocket() {
-  const { user, room, addMessage, addStatus, setHistory } = useChat();
+  const { user, room, addMessage, addStatus, setHistory, setRoomsOnline } = useChat()
+  const lastRoomRef = useRef("")
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
 
-    socket.connect();
-    socket.emit("login", { name: user, room });
+    const onConnect = () => {
+      socket.emit("login", { name: user, room })
+      lastRoomRef.current = room ?? ""
+    }
 
-    const handleMessage = (m: any) => addMessage(m);
-    const handleStatus  = (s: string) => addStatus(s);
-    const handleHistory = (h: any[]) => setHistory(h);
+    const onRoomsList = (list: RoomInfo[]) => {
+      setRoomsOnline(list)
+    }
 
-    socket.on("message", handleMessage);
-    socket.on("status", handleStatus);
-    socket.on("history", handleHistory);
+    socket.on("connect", onConnect)
+    socket.on("rooms:list", onRoomsList)
+
+    socket.on("message", addMessage)
+    socket.on("status", addStatus)
+    socket.on("history", setHistory)
+
+    socket.connect()
 
     return () => {
-      socket.off("message", handleMessage);
-      socket.off("status", handleStatus);
-      socket.off("history", handleHistory);
-      socket.disconnect();
-    };
-  }, [user, room, addMessage, addStatus, setHistory]);
+      socket.off("connect", onConnect)
+      socket.off("rooms:list", onRoomsList)
+      socket.off("message", addMessage)
+      socket.off("status", addStatus)
+      socket.off("history", setHistory)
+      socket.disconnect()
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (!user || !room) return
+    if (!socket.connected) return
+
+    if (lastRoomRef.current && lastRoomRef.current !== room) {
+      socket.emit("joinRoom", { room })
+    }
+
+    lastRoomRef.current = room
+  }, [room, user])
 }

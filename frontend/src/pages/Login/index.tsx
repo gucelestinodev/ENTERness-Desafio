@@ -18,44 +18,45 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-dvw h-dvh rounded-none border-0">
-      <CardContent className="h-full flex items-center justify-center p-6">
-        <div className="w-full max-w-sm text-center space-y-5 animate-fade-in">
-          <h2 className="text-2xl font-semibold">Entrar no chat</h2>
+    <div className="w-dvw h-dvh bg-linear-to-b from-background to-muted/40">
+      <div className="h-full grid place-items-center p-6">
+        <Card className="w-full max-w-md shadow-sm">
+          <CardContent className="pt-8 flex flex-col items-center text-center gap-5">
+            <div className="w-full max-w-sm text-center space-y-5 animate-fade-in">
+              <h2 className="text-2xl font-semibold">Entrar no chat</h2>
 
-          <div className="space-y-2">
-            <Label className="w-full text-center">Seu nome</Label>
-            <Input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ex: Gustavo"
-              onKeyDown={(e) => e.key === "Enter" && enter()}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label className="w-full text-center">Seu nome</Label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ex: Gustavo"
+                  onKeyDown={(e) => e.key === "Enter" && enter()}
+                />
+              </div>
 
-          <div className="space-y-2">
-            <Label className="w-full text-center">Sala (opcional)</Label>
-            <Input
-              value={room}
-              onChange={(e) => setRoom(e.target.value)}
-              placeholder="geral, suporte..."
-              onKeyDown={(e) => e.key === "Enter" && enter()}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label className="w-full text-center">Sala (opcional)</Label>
+                <Input
+                  value={room}
+                  onChange={(e) => setRoom(e.target.value)}
+                  placeholder="geral, suporte..."
+                  onKeyDown={(e) => e.key === "Enter" && enter()}
+                />
+              </div>
 
-          <Button
-            variant="brand"
-            className="w-full"
-            onClick={enter}
-            disabled={!name.trim()}
-          >
-            Entrar
-          </Button>
-
-
-
-        </div>
-      </CardContent>
-    </Card>
+              <Button
+                variant="brand"
+                className="w-full"
+                onClick={enter}
+                disabled={!name.trim()}
+              >
+                Entrar
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

@@ -1,17 +1,16 @@
-import { useEffect, useRef } from "react";
-import { useChat } from "../store/chat";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useRef } from "react"
+import { useChat } from "../store/chat"
 
 export default function MessageList() {
-  const { messages, status } = useChat();
-  const endRef = useRef<HTMLDivElement | null>(null);
+  const { messages, status } = useChat()
+  const endRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, status]);
+    endRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [messages, status])
 
   return (
-    <ScrollArea className="h-80 rounded-md border p-3">
+    <div className="h-full w-full overflow-auto rounded-md border p-3">
       <div className="space-y-2">
         {status.map((s, i) => (
           <div key={`s-${i}`} className="text-muted-foreground italic animate-fade-in">
@@ -24,16 +23,12 @@ export default function MessageList() {
             <span className="font-semibold">{m.user}:</span>{" "}
             <span>{m.text}</span>
             {m.imageUrl ? (
-              <img
-                src={m.imageUrl}
-                alt="upload"
-                className="mt-2 max-h-60 rounded border"
-              />
+              <img src={m.imageUrl} alt="upload" className="mt-2 max-h-60 rounded border" />
             ) : null}
           </div>
         ))}
         <div ref={endRef} />
       </div>
-    </ScrollArea>
-  );
+    </div>
+  )
 }
