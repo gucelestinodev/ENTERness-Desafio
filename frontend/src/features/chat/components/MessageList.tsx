@@ -2,10 +2,39 @@ import { useEffect, useRef } from "react"
 import { useChat } from "../store/chat"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Download } from "lucide-react"
 
 export default function MessageList() {
   const { messages, user } = useChat()
   const endRef = useRef<HTMLDivElement | null>(null)
+
+  const [open, setOpen] = useState(false)
+  const [activeImg, setActiveImg] = useState<string | null>(null)
+
+  const openImage = (src: string) => {
+    setActiveImg(src)
+    setOpen(true)
+  }
+
+  const downloadImage = async (src: string) => {
+    const res = await fetch(src)
+    const blob = await res.blob()
+    const url = URL.createObjectURL(blob)
+
+    const a = document.createElement("a")
+    a.href = url
+
+    const ext = blob.type.split("/")[1] || "png"
+    a.download = `imagem.${ext}`
+
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    URL.revokeObjectURL(url)
+  }
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -55,11 +84,18 @@ export default function MessageList() {
                     {m.text}
                   </p>
                   {m.imageUrl ? (
-                    <img
-                      src={m.imageUrl}
-                      alt="upload"
-                      className="mt-2 max-h-60 rounded-lg border"
-                    />
+                    <button
+                      type="button"
+                      onClick={() => openImage(m.imageUrl!)}
+                      className="mt-2 block"
+                      title="Abrir imagem"
+                    >
+                      <img
+                        src={m.imageUrl}
+                        alt="upload"
+                        className="max-h-60 rounded-lg border cursor-pointer hover:opacity-90 transition"
+                      />
+                    </button>
                   ) : null}
                 </div>
               </div>
@@ -68,6 +104,30 @@ export default function MessageList() {
         })}
         <div ref={endRef} />
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-3xl p-0 overflow-hidden">
+          {activeImg ? (
+            <div className="relative bg-black">
+              <img
+                src={activeImg}
+                alt="Imagem"
+                className="w-full max-h-[80vh] object-contain"
+              />
+
+              <div className="absolute top-3 right-3 flex gap-2">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => downloadImage(activeImg)}
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Baixar
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </ScrollArea>
   )
 }

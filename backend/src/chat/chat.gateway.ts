@@ -9,7 +9,7 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
-type ChatMessage = { user: string; text: string; room?: string };
+type ChatMessage = { user: string; text: string; room?: string; imageUrl?: string };
 type User = { id: string; name: string; room: string };
 
 type RoomInfo = { name: string; usersCount: number };
@@ -96,7 +96,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!user) return;
 
     const room = user.room;
-    this.removeFromRoomIndex(room, socket.id); 
+    this.removeFromRoomIndex(room, socket.id);
 
     this.server.to(room).emit("status", `${user.name} saiu da sala`);
     this.users.delete(socket.id);
@@ -124,12 +124,18 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('message')
-  message(@MessageBody() payload: { text: string }, @ConnectedSocket() socket: Socket) {
+  message(@MessageBody() payload: { text: string; imageUrl?: string }, @ConnectedSocket() socket: Socket) {
     const user = this.users.get(socket.id);
     if (!user) return;
 
     const room = user.room;
-    const msg: ChatMessage = { user: user.name, text: payload.text, room };
+
+    const msg: ChatMessage = {
+      user: user.name,
+      text: payload.text ?? "",
+      room,
+      imageUrl: payload.imageUrl,
+    };
 
     const list = this.history.get(room) ?? [];
     list.push(msg);
