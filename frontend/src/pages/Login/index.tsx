@@ -26,8 +26,9 @@ export default function LoginPage() {
               <h2 className="text-2xl font-semibold">Entrar no chat</h2>
 
               <div className="space-y-2">
-                <Label className="w-full text-center">Seu nome</Label>
+                <Label htmlFor="name" className="w-full text-center">Seu nome</Label>
                 <Input
+                  id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Ex: Gustavo"
@@ -36,8 +37,9 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <Label className="w-full text-center">Sala (opcional)</Label>
+                <Label htmlFor="room" className="w-full text-center">Sala (opcional)</Label>
                 <Input
+                  id="room" 
                   value={room}
                   onChange={(e) => setRoom(e.target.value)}
                   placeholder="geral, suporte..."

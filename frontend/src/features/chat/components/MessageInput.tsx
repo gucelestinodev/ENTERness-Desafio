@@ -111,6 +111,7 @@ export default function MessageInput() {
                     variant="outline"
                     className="h-10 w-10 p-0"
                     disabled={isSending}
+                    aria-label="Abrir emojis"
                   >
                     <Smile className="h-4 w-4" />
                   </Button>
@@ -142,6 +143,7 @@ export default function MessageInput() {
                 className={cn("h-10 w-10 p-0")}
                 onClick={pickFile}
                 disabled={isSending}
+                aria-label="Anexar arquivo"
               >
                 <Paperclip className="h-4 w-4" />
               </Button>
@@ -163,6 +165,7 @@ export default function MessageInput() {
           className="h-10 w-10 p-0"
           onClick={send}
           disabled={!canSend || isSending}
+          aria-label="Enviar mensagem"
         >
           <Send className="h-4 w-4" />
         </Button>
