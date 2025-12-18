@@ -15,7 +15,7 @@ export default function ChatHeader() {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="left" className="p-0">
-                            <RoomsSidebar className="h-full w-72" mobile />
+                            <RoomsSidebar className="h-full w-72" />
                         </SheetContent>
                     </Sheet>
                 </div>

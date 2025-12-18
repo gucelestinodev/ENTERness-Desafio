@@ -8,4 +8,5 @@ export const socket = io("http://localhost:3000", {
   reconnectionAttempts: Infinity,
   reconnectionDelay: 500,
   auth: { traceId: TRACE_ID },
+  withCredentials: true
 })

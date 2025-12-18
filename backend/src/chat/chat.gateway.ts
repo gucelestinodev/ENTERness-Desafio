@@ -18,7 +18,7 @@ const FIXED_ROOMS = ['geral', 'suporte', 'desenvolvimento'] as const;
 
 @WebSocketGateway({
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.CORS_ORIGIN?.split(",") ?? ["http://localhost:5173"],
     credentials: true,
   },
 })
